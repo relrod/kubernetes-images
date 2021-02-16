@@ -7,7 +7,6 @@ async function grabUserMetrics(): Promise<MetricSubmission[]> {
   const body = await curlUrl('http://www.ercot.com/content/cdr/html/real_time_system_conditions.html');
 
   const sections = body.split('an="2">').slice(1);
-
   const metrics = new Array<MetricSubmission>();
   for (const section of sections) {
     const label = section.slice(0, section.indexOf('<'));
