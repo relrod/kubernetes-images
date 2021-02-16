@@ -1,18 +1,10 @@
 // deno run --allow-net --allow-env examples/emit-metrics.ts
 
-import DatadogApi from "https://deno.land/x/datadog_api@v0.1.2/mod.ts";
-import { MetricSubmission } from "https://deno.land/x/datadog_api@v0.1.2/v1/metrics.ts";
-const datadog = DatadogApi.fromEnvironment(Deno.env);
-
-import {SubProcess} from "https://github.com/cloudydeno/deno-bitesized/raw/main/system/sub-process@v1.ts";
+import { curlUrl, runMetricsLoop, MetricSubmission } from "./_lib.ts";
+await runMetricsLoop(grabUserMetrics, 1, 'ercot_realtime');
 
 async function grabUserMetrics(): Promise<MetricSubmission[]> {
-
-  const body = await new SubProcess('fetch', {
-    cmd: ['curl', '-s', 'http://www.ercot.com/content/cdr/html/real_time_system_conditions.html'],
-    errorPrefix: /curl: /,
-    stdin: 'null',
-  }).captureAllTextOutput();
+  const body = await curlUrl('http://www.ercot.com/content/cdr/html/real_time_system_conditions.html');
 
   const sections = body.split('an="2">').slice(1);
 
@@ -45,33 +37,4 @@ async function grabUserMetrics(): Promise<MetricSubmission[]> {
   console.log(new Date, metrics[0]?.points[0]?.value);
 
   return metrics;
-}
-
-// Run at the same time, each minute
-import { fixedInterval } from "https://cloudydeno.github.io/deno-bitesized/logic/fixed-interval@v1.ts";
-for await (const dutyCycle of fixedInterval(60 * 1000)) {
-  try {
-
-    const data = await grabUserMetrics();
-
-    // Our own loop-health metric
-    data.push({
-      metric_name: `ercot.app.duty_cycle`,
-      points: [{value: dutyCycle*100}],
-      tags: [`app:ercot_realtime`],
-      interval: 60,
-      metric_type: 'gauge',
-    });
-
-    // Submit all metrics
-    try {
-      await datadog.v1Metrics.submit(data);
-    } catch (err) {
-      console.log(new Date().toISOString(), 'eh', err.message);
-      await datadog.v1Metrics.submit(data);
-    }
-
-  } catch (err) {
-    console.log(new Date().toISOString(), '!!', err.message);
-  }
 }

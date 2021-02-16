@@ -1,22 +1,30 @@
 // deno run --allow-net --allow-env examples/emit-metrics.ts
 
-import DatadogApi from "https://deno.land/x/datadog_api@v0.1.2/mod.ts";
-import { MetricSubmission } from "https://deno.land/x/datadog_api@v0.1.2/v1/metrics.ts";
-const datadog = DatadogApi.fromEnvironment(Deno.env);
-
 const knownTexts = new Map<string,string>();
 
+// https://www.faa.gov/air_traffic/weather/asos/?state=TX
+// https://en.wikipedia.org/wiki/List_of_power_stations_in_Texas#Wind_farms
+const ids = [
+  'KABI', // Abilene (near Roscoe Wind Farm)
+  'KAUS',
+  'KDFW',
+  'KEFD', // Houston/Ellington Ar
+  'KGLS', // Galveston/Scholes In
+  'KHOU', // Houston/Hobby Arpt
+  'KIAH',
+  'KLBX', // Angleton/Texas Gulf
+  'KLRD', // Laredo (nearish Javelina Wind Energy Center)
+  'KLVJ', // Houston/Pearland Rgn
+  'KMAF',
+  'KSAT',
+  'KSGR', // Houston/Sugar Land R
+  'KTKI',
+];
+
+import { runMetricsLoop, MetricSubmission } from "./_lib.ts";
+await runMetricsLoop(grabUserMetrics, 10, 'metar');
+
 async function grabUserMetrics(): Promise<MetricSubmission[]> {
-
-  const ids = [
-    'KAUS',
-    'KDFW',
-    'KIAH',
-    'KMAF',
-    'KSAT',
-    'KTKI',
-  ];
-
   const body = await fetch(`https://www.aviationweather.gov/metar/data?ids=${ids.join('%2C')}&format=decoded`, {
     headers: {
       'accept': 'text/html',
@@ -93,33 +101,4 @@ async function grabUserMetrics(): Promise<MetricSubmission[]> {
   }
   console.log(new Date, (stations[0] ?? [])[0]);
   return stations.flat();
-}
-
-// Run at the same time, each minute
-import { fixedInterval } from "https://cloudydeno.github.io/deno-bitesized/logic/fixed-interval@v1.ts";
-for await (const dutyCycle of fixedInterval(10 * 60 * 1000)) {
-  try {
-
-    const data = await grabUserMetrics();
-
-    // Our own loop-health metric
-    data.push({
-      metric_name: `ercot.app.duty_cycle`,
-      points: [{value: dutyCycle*100}],
-      tags: [`app:metar`],
-      interval: 60,
-      metric_type: 'gauge',
-    });
-
-    // Submit all metrics
-    try {
-      await datadog.v1Metrics.submit(data);
-    } catch (err) {
-      console.log(new Date().toISOString(), 'eh', err.message);
-      await datadog.v1Metrics.submit(data);
-    }
-
-  } catch (err) {
-    console.log(new Date().toISOString(), '!!', err.message);
-  }
 }
