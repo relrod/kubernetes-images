@@ -43,7 +43,7 @@ export async function runMetricsLoop(
 
 export function curlUrl(url: string) {
   return new SubProcess('fetch', {
-    cmd: ['curl', '-s', 'http://www.ercot.com/content/cdr/html/real_time_system_conditions.html'],
+    cmd: ['curl', '-s', url],
     errorPrefix: /curl: /,
     stdin: 'null',
   }).captureAllTextOutput();
