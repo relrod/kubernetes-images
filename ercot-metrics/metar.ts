@@ -21,7 +21,7 @@ const ids = [
   'KTKI',
 ];
 
-import { runMetricsLoop, MetricSubmission, headers } from "./_lib.ts";
+import { runMetricsLoop, MetricSubmission, headers, fetch } from "./_lib.ts";
 export async function start() {
   await runMetricsLoop(grabUserMetrics, 10, 'metar');
 }

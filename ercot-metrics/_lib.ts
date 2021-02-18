@@ -1,7 +1,10 @@
-export type { MetricSubmission } from "https://deno.land/x/datadog_api@v0.1.2/v1/metrics.ts";
+export * from "./deps.ts";
+import {
+  DatadogApi,
+  MetricSubmission,
+  fixedInterval,
+} from "./deps.ts";
 
-import DatadogApi from "https://deno.land/x/datadog_api@v0.1.2/mod.ts";
-import { MetricSubmission } from "https://deno.land/x/datadog_api@v0.1.2/v1/metrics.ts";
 const datadog = DatadogApi.fromEnvironment(Deno.env);
 
 export function headers(accept = 'text/html') {
@@ -12,8 +15,6 @@ export function headers(accept = 'text/html') {
     },
   };
 }
-
-import { fixedInterval } from "https://cloudydeno.github.io/deno-bitesized/logic/fixed-interval@v1.ts";
 
 export async function runMetricsLoop(
   gather: () => Promise<MetricSubmission[]>,

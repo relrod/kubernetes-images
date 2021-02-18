@@ -1,6 +1,6 @@
 // deno run --allow-net --allow-env examples/emit-metrics.ts
 
-import { runMetricsLoop, MetricSubmission, headers } from "./_lib.ts";
+import { runMetricsLoop, MetricSubmission, headers, fetch } from "./_lib.ts";
 export async function start() {
   await waitForNextPrices();
   await runMetricsLoop(grabUserMetrics, 15, 'ercot_pricing');

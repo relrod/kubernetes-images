@@ -10,4 +10,5 @@ export {
 } from "https://raw.githubusercontent.com/cloudydeno/deno-openmetrics_exporter/9425a42bd92595e75fb45034df70d8eff61aa10d/mod.ts";
 export {
   replaceGlobalFetch,
+  fetch,
 } from "https://raw.githubusercontent.com/cloudydeno/deno-openmetrics_exporter/9425a42bd92595e75fb45034df70d8eff61aa10d/lib/instrumented/fetch.ts";

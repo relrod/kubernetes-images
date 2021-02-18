@@ -1,9 +1,9 @@
 // deno run --allow-net --allow-env examples/emit-metrics.ts
 
-import { Sha256 } from "https://deno.land/std@0.87.0/hash/sha256.ts";
+import { Sha256 } from "./deps.ts";
 let lastHash = '';
 
-import { runMetricsLoop, MetricSubmission, headers } from "./_lib.ts";
+import { runMetricsLoop, MetricSubmission, headers, fetch } from "./_lib.ts";
 export async function start() {
   await runMetricsLoop(grabUserMetrics, 10, 'poweroutages_us');
 }
