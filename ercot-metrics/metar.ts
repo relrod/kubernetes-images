@@ -97,6 +97,6 @@ async function grabUserMetrics(): Promise<MetricSubmission[]> {
     stations.push(metrics);
     knownTexts.set(code, text);
   }
-  console.log(new Date, (stations[0] ?? [])[0]?.tags);
+  console.log(new Date, 'METAR', (stations[0] ?? [])[0]?.tags);
   return stations.flat();
 }

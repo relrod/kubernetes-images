@@ -36,7 +36,7 @@ async function grabUserMetrics(): Promise<MetricSubmission[]> {
     }
   }
 
-  console.log(new Date, metrics[0]?.points[0]?.value);
+  console.log(new Date, 'grid', metrics[0]?.points[0]?.value);
 
   return metrics;
 }

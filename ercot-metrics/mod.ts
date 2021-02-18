@@ -5,6 +5,15 @@ import { start as startMetar } from "./metar.ts";
 import { start as startOutages } from "./outages.ts";
 import { start as startPrices } from "./prices.ts";
 
+import {
+  runMetricsServer, replaceGlobalFetch,
+} from './deps.ts';
+if (Deno.args.includes('--serve-metrics')) {
+  replaceGlobalFetch();
+  runMetricsServer({ port: 9090 });
+  console.log("Now serving OpenMetrics @ :9090/metrics");
+}
+
 if (import.meta.main) {
   await Promise.race([
     // 60s loops

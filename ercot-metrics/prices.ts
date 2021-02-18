@@ -15,7 +15,7 @@ async function grabUserMetrics(): Promise<MetricSubmission[]> {
   const last = sections[sections.length-1]?.slice(2, -1) ??[];
 
   const timestamp = sections[sections.length-1][1];
-  console.log(new Date, timestamp, header[0], last[0]);
+  console.log(new Date, 'Prices', timestamp, header[0], last[0]);
 
   return header.map((h, idx) => {
     return {

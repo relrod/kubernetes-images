@@ -43,7 +43,7 @@ async function grabUserMetrics(): Promise<MetricSubmission[]> {
     }
   }
 
-  console.log(new Date, metrics
+  console.log(new Date, 'ancillary', metrics
     .find(x => x.metric_name.endsWith('PRC'))
     ?.points[0]?.value);
 

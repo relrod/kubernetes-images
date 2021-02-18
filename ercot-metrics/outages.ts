@@ -12,9 +12,9 @@ if (import.meta.main) start();
 async function grabUserMetrics(): Promise<MetricSubmission[]> {
   const bodyText = await fetch(`https://poweroutage.us/api/web/counties?key=18561563181588&countryid=us&statename=Texas`, headers('application/json')).then(resp => resp.text());
 
-  const hash = new Sha256().update(bodyText).hex();
+  const hash = new Sha256().update(bodyText).hex().slice(0, 12);
   if (hash === lastHash) {
-    console.log(new Date, hash);
+    console.log(new Date, 'Outages', hash);
     return [];
   }
   lastHash = hash;
@@ -27,7 +27,7 @@ async function grabUserMetrics(): Promise<MetricSubmission[]> {
     }[];
   };
 
-  console.log(new Date, hash, body.WebCountyRecord[0].CountyName, body.WebCountyRecord[0].OutageCount);
+  console.log(new Date, 'Outages', hash, body.WebCountyRecord[0].CountyName, body.WebCountyRecord[0].OutageCount);
   return body.WebCountyRecord.flatMap(x => [{
     metric_name: `poweroutageus.outages`,
     tags: [

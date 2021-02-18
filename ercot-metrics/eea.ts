@@ -11,7 +11,7 @@ async function grabUserMetrics(): Promise<MetricSubmission[]> {
 
   const line = body.split(/\r?\n/).find(x => x.startsWith('eeaLevel = '));
   if (!line) {
-    console.log(new Date, 'Unknown');
+    console.log(new Date, 'EEA Unknown');
     return [];
   }
 
