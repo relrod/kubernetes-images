@@ -4,7 +4,14 @@ import DatadogApi from "https://deno.land/x/datadog_api@v0.1.2/mod.ts";
 import { MetricSubmission } from "https://deno.land/x/datadog_api@v0.1.2/v1/metrics.ts";
 const datadog = DatadogApi.fromEnvironment(Deno.env);
 
-import {SubProcess} from "https://github.com/cloudydeno/deno-bitesized/raw/main/system/sub-process@v1.ts";
+export function headers(accept = 'text/html') {
+  return {
+    headers: {
+      'Accept': accept,
+      'User-Agent': `Deno/${Deno.version} (+https://p.datadoghq.com/sb/5c2fc00be-393be929c9c55c3b80b557d08c30787a)`,
+    },
+  };
+}
 
 import { fixedInterval } from "https://cloudydeno.github.io/deno-bitesized/logic/fixed-interval@v1.ts";
 
@@ -40,11 +47,3 @@ export async function runMetricsLoop(
     }
   }
 };
-
-export function curlUrl(url: string) {
-  return new SubProcess('fetch', {
-    cmd: ['curl', '-s', url],
-    errorPrefix: /curl: /,
-    stdin: 'null',
-  }).captureAllTextOutput();
-}

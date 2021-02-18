@@ -1,10 +1,13 @@
 // deno run --allow-net --allow-env examples/emit-metrics.ts
 
-import { curlUrl, runMetricsLoop, MetricSubmission } from "./_lib.ts";
-await runMetricsLoop(grabUserMetrics, 10, 'ercot_eea');
+import { runMetricsLoop, MetricSubmission,headers } from "./_lib.ts";
+export async function start() {
+  await runMetricsLoop(grabUserMetrics, 10, 'ercot_eea');
+}
+if (import.meta.main) start();
 
 async function grabUserMetrics(): Promise<MetricSubmission[]> {
-  const body = await curlUrl(`http://www.ercot.com/content/alerts/conservation_state.js`);
+  const body = await fetch(`http://127.0.0.1:5102/content/alerts/conservation_state.js`, headers('application/javascript')).then(x => x.text());
 
   const line = body.split(/\r?\n/).find(x => x.startsWith('eeaLevel = '));
   if (!line) {

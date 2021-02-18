@@ -21,16 +21,14 @@ const ids = [
   'KTKI',
 ];
 
-import { runMetricsLoop, MetricSubmission } from "./_lib.ts";
-await runMetricsLoop(grabUserMetrics, 10, 'metar');
+import { runMetricsLoop, MetricSubmission, headers } from "./_lib.ts";
+export async function start() {
+  await runMetricsLoop(grabUserMetrics, 10, 'metar');
+}
+if (import.meta.main) start();
 
 async function grabUserMetrics(): Promise<MetricSubmission[]> {
-  const body = await fetch(`https://www.aviationweather.gov/metar/data?ids=${ids.join('%2C')}&format=decoded`, {
-    headers: {
-      'accept': 'text/html',
-      'User-Agent': 'curl/7.64.1',
-    },
-  }).then(resp => resp.text());
+  const body = await fetch(`https://www.aviationweather.gov/metar/data?ids=${ids.join('%2C')}&format=decoded`, headers('text/html')).then(resp => resp.text());
 
   const sections = body.split(/<!-- Data (?:starts|ends) here -->/)[1].split(`METAR for:</span></td><td>`).slice(1);
 
@@ -99,6 +97,6 @@ async function grabUserMetrics(): Promise<MetricSubmission[]> {
     stations.push(metrics);
     knownTexts.set(code, text);
   }
-  console.log(new Date, (stations[0] ?? [])[0]);
+  console.log(new Date, (stations[0] ?? [])[0]?.tags);
   return stations.flat();
 }

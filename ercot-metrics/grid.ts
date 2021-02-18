@@ -1,10 +1,13 @@
 // deno run --allow-net --allow-env examples/emit-metrics.ts
 
-import { curlUrl, runMetricsLoop, MetricSubmission } from "./_lib.ts";
-await runMetricsLoop(grabUserMetrics, 1, 'ercot_realtime');
+import { runMetricsLoop, MetricSubmission, headers } from "./_lib.ts";
+export async function start() {
+  await runMetricsLoop(grabUserMetrics, 1, 'ercot_realtime');
+}
+if (import.meta.main) start();
 
 async function grabUserMetrics(): Promise<MetricSubmission[]> {
-  const body = await curlUrl('http://www.ercot.com/content/cdr/html/real_time_system_conditions.html');
+  const body = await fetch('http://127.0.0.1:5102/content/cdr/html/real_time_system_conditions.html', headers('text/html')).then(x => x.text());
 
   const sections = body.split('an="2">').slice(1);
   const metrics = new Array<MetricSubmission>();
