@@ -5,7 +5,7 @@ let lastHash = '';
 
 import { runMetricsLoop, MetricSubmission, headers, fetch } from "./_lib.ts";
 export async function start() {
-  await runMetricsLoop(grabUserMetrics, 10, 'poweroutages_us');
+  await runMetricsLoop(grabUserMetrics, 30, 'poweroutages_us');
 }
 if (import.meta.main) start();
 

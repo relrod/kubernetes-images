@@ -2,7 +2,7 @@
 
 import { runMetricsLoop, MetricSubmission, headers, fetch } from "./_lib.ts";
 export async function start() {
-  await runMetricsLoop(grabUserMetrics, 1, 'ercot_ancillary');
+  await runMetricsLoop(grabUserMetrics, 5, 'ercot_ancillary');
 }
 if (import.meta.main) start();
 

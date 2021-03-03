@@ -23,7 +23,7 @@ const ids = [
 
 import { runMetricsLoop, MetricSubmission, headers, fetch } from "./_lib.ts";
 export async function start() {
-  await runMetricsLoop(grabUserMetrics, 10, 'metar');
+  await runMetricsLoop(grabUserMetrics, 30, 'metar');
 }
 if (import.meta.main) start();
 
