@@ -1,17 +1,20 @@
 // deno run --allow-net --allow-env examples/emit-metrics.ts
 
+// set higher numbers to slow down the program:
+const slownessFactor = parseInt(Deno.env.get('SlownessFactor') || '1', 10);
+
 import { runMetricsLoop, MetricSubmission, headers, fetch } from "./_lib.ts";
-function sleep(mins: number) { return new Promise(ok => setTimeout(ok, mins * 60 * 1000)); }
+function sleep(mins: number) { return new Promise(ok => setTimeout(ok, mins * 60 * 1000 * slownessFactor)); }
 
 export async function start() {
   await Promise.race([
-    runMetricsLoop(() => grabYearMetrics(2021), 5, 'aoc_stats'),
-    sleep( 2).then(() => runMetricsLoop(() => grabYearMetrics(2020), 30, 'aoc_stats')),
-    sleep( 7).then(() => runMetricsLoop(() => grabYearMetrics(2019), 30, 'aoc_stats')),
-    sleep(12).then(() => runMetricsLoop(() => grabYearMetrics(2018), 30, 'aoc_stats')),
-    sleep(17).then(() => runMetricsLoop(() => grabYearMetrics(2017), 30, 'aoc_stats')),
-    sleep(22).then(() => runMetricsLoop(() => grabYearMetrics(2016), 30, 'aoc_stats')),
-    sleep(27).then(() => runMetricsLoop(() => grabYearMetrics(2015), 30, 'aoc_stats')),
+    runMetricsLoop(() =>                      grabYearMetrics(2021),  5 * slownessFactor, 'aoc_stats'),
+    sleep( 2).then(() => runMetricsLoop(() => grabYearMetrics(2020), 30 * slownessFactor, 'aoc_stats')),
+    sleep( 7).then(() => runMetricsLoop(() => grabYearMetrics(2019), 30 * slownessFactor, 'aoc_stats')),
+    sleep(12).then(() => runMetricsLoop(() => grabYearMetrics(2018), 30 * slownessFactor, 'aoc_stats')),
+    sleep(17).then(() => runMetricsLoop(() => grabYearMetrics(2017), 30 * slownessFactor, 'aoc_stats')),
+    sleep(22).then(() => runMetricsLoop(() => grabYearMetrics(2016), 30 * slownessFactor, 'aoc_stats')),
+    sleep(27).then(() => runMetricsLoop(() => grabYearMetrics(2015), 30 * slownessFactor, 'aoc_stats')),
   ]);
 }
 if (import.meta.main) start();
