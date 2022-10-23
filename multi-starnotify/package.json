@@ -15,6 +15,6 @@
     "moment": "^2.20.1",
     "moment-timezone": "^0.5.14",
     "multimatch": "^2.1.0",
-    "node-fetch": "^2.6.1"
+    "node-fetch": "^2.6.7"
   }
 }
