@@ -1,14 +1,15 @@
-FROM library/centos:7
+FROM quay.io/centos/centos:stream9
 
 # install nagios from pkg manager
-RUN yum clean expire-cache \
- && yum install -y epel-release \
- && yum install -y \
+RUN dnf clean expire-cache \
+ && dnf install -y epel-release dnf-plugins-core \
+ && dnf config-manager --set-enabled crb \
+ && dnf install -y \
       nagios nagios-selinux nagios-plugins-all nagios-plugins-nrpe \
       perl-LWP-Protocol-https perl-Crypt-SSLeay perl-libwww-perl \
       python-requests \
       vim \
- && yum clean all
+ && dnf clean all
 
 # install pinned kubectl release directly
 RUN curl -LO \
