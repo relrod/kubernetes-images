@@ -1,5 +1,5 @@
 # build relevant binaries from source
-FROM golang:1 AS build-go
+FROM library/golang:1 AS build-go
 WORKDIR /src
 ADD . /src/
 RUN go install .

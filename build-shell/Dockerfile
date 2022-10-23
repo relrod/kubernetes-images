@@ -1,4 +1,4 @@
-FROM docker:dind
+FROM library/docker:dind
 RUN apk add --no-cache python2 git bash vim bind-tools
 WORKDIR /root
 

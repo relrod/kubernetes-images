@@ -1,5 +1,5 @@
 # based on https://docs.docker.com/engine/examples/running_ssh_service/
-FROM ubuntu:18.04
+FROM library/ubuntu:18.04
 
 # don't leave host keys on the instance
 RUN apt-get update \

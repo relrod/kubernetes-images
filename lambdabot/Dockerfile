@@ -1,4 +1,4 @@
-FROM centos:8
+FROM library/centos:8
 MAINTAINER ricky@elrod.me
 
 # Obtain haskell and core deps

@@ -1,4 +1,4 @@
-FROM golang:1.15 AS build-go
+FROM library/golang:1.15 AS build-go
 WORKDIR /src
 # cache deps
 ADD go.* /src/
