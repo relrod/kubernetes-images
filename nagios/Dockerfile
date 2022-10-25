@@ -21,3 +21,6 @@ RUN curl -LO \
 # patch baseurl for direct hosting
 RUN sed -Ei.bak "/cgi_base_url/s#='.+'#='/cgi-bin'#" \
       /usr/share/nagios/html/config.inc.php
+
+# make it so nagios user can ping
+RUN setcap cap_net_admin,cap_net_raw+p /usr/bin/ping
